@@ -1,3 +1,4 @@
+let number = require("is-number");
 module.exports = class processData{
     getIdDB = (table) => {
         switch (table) {
@@ -18,20 +19,21 @@ module.exports = class processData{
         let values = 'VALUES(';
         for (let i = 0; i < list.length; i++) {
             if (i === (list.length - 1)) {
-                values += `${list[i]});`
+                values += (number(list[i]))?`${list[i]});`:`'${list[i]}');`;
             } else {
-                values += `${list[i]},`
+                values += (number(list[i]))?`${list[i]},`:`'${list[i]}',`;
             }
         }    
+        console.log(values);
         return values;
     }
     
     getUpdateText = (body) => {
         let update = '';
         for (let clave in body) {
-            // if (body.hasOwnProperty(clave)) {
+            if (body.hasOwnProperty(clave)) {
                 update += `${clave} = ${body[clave]},`;
-            // }
+            }
         }
         return update.substring(0, update.length - 1);
     }

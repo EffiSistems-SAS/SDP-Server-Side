@@ -20,8 +20,8 @@ class Dao {
         return Dao.sendRequest(`SELECT * FROM ${tabla} WHERE ${processData.getIdDB(tabla)} = ${id};`);
     }
 
-    static create(tabla,body){
-        return Dao.sendRequest(`INSERT INTO ${tabla} ${processData.getValueText(body)};`);
+    static create(tabla,values){
+        return Dao.sendRequest(`INSERT INTO ${tabla} ${processData.getValueText(values)};`);
     }
 
     static edit(tabla,body,id){
