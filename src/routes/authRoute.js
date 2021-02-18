@@ -20,14 +20,10 @@ routerAuth.get('/login/:mail/:password', async (req,res) => {
 });
 
 routerAuth.post('/administrador',async (req,res) => {
+    req.body.id = `IDEMPLEADO_${Date.now()}`
     await controller.crearEmpleado(req.body);
-    await controller.createAdministrador({idAdministrador:`IDADMIN${Date.now()}`,idEmpleado:req.body.id});
+    await controller.createAdministrador({idAdministrador:`IDADMIN_${Date.now()}`,idEmpleado:req.body.id});
     res.send(`Administrador con código ${req.body.id} creado`);
-});
-
-routerAuth.post('/empleado',async (req,res) => {
-    await controller.crearEmpleado(req.body);
-    res.send(`Empleado con código ${req.body.id} creado`);
 });
 
 module.exports = routerAuth;

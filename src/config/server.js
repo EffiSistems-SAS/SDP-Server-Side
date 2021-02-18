@@ -4,6 +4,7 @@ const PORT = process.env.PORT || 3000;
 const fileRouter = require('../routes/fileRouter');
 const authRouter = require('../routes/authRoute');
 const multerRouter = require('../routes/multerRouter');
+const routerAdmin = require('../routes/adminOpsRouter');
 
 module.exports = (app) => {
 
@@ -27,6 +28,7 @@ module.exports = (app) => {
   app.use('/files',fileRouter);
   app.use('/auth',authRouter);
   app.use('/multer',multerRouter);
+  app.use('/adminOps',routerAdmin);
 
   //Inicializando aplicación en el puerto dado por el entorno
   app.listen(PORT,()=>{
