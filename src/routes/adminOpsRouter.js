@@ -8,6 +8,8 @@ let controller = new MongoController();
 routerAdmin.post('/create',async (req,res) => {
     req.body.id = `IDEMPLEADO_${Date.now()}`
     let empleado = await controller.crearEmpleado(req.body);
+    console.log(req.body);
+    console.log(empleado);
     if(empleado){
         res.status(200).send(`Empleado con código ${req.body.id} creado`);
     }else{
