@@ -17,12 +17,17 @@ routerAdmin.post('/create',async (req,res) => {
 
 routerAdmin.delete('/delete/:correo?',async (req,res) => {
     let respuesta = await controller.eliminarEmpleado(req.query.correo);
-    res.send(respuesta);
+    res.status(202).send(respuesta);
 });
 
-routerAdmin.put('/edit/',(req,res) => {
-    let user = controller.editarEmpleado(req.body);
-    res.send(`Empleado ${user.nombre} editado`);
+routerAdmin.put('/edit/',async (req,res) => {
+    let empleado = await controller.editarEmpleado(req.body);
+    if(empleado){
+        res.status(200).send(`Empleado ${empleado.nombre} editado`);
+    }else{
+        res.status(400).send(`Ocurrio un error`);
+    }
+    
 });
 
 routerAdmin.get('/get/:correo',async (req,res) => {

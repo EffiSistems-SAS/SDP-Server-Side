@@ -31,7 +31,7 @@ class MongoController {
 
     async eliminarEmpleado(correo){
         await Empleado.deleteOne({ correo: correo });
-        return `Usuario ${id} ha sido eliminado`;
+        return `Usuario eliminado`;
     }
 
     async obtenerAdministrador(data){
@@ -41,6 +41,9 @@ class MongoController {
     
     async editarEmpleado(body) {
         let user = await Empleado.findOne({ correo: body.correo });
+        if(user === null || user === undefined){
+            return null;
+        }
         for (let clave in user) {
             if (body.hasOwnProperty(clave)) {
                user[clave] = body[clave];
