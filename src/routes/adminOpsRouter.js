@@ -16,8 +16,8 @@ routerAdmin.delete('/delete/:correo?',async (req,res) => {
     res.send(respuesta);
 });
 
-routerAdmin.put('/edit/:correo?',(req,res) => {
-    let user = controller.editarEmpleado(req.body,req.query.correo);
+routerAdmin.put('/edit/',(req,res) => {
+    let user = controller.editarEmpleado(req.body);
     res.send(`Empleado ${user.nombre} editado`);
 });
 

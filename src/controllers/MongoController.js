@@ -34,8 +34,8 @@ class MongoController {
         return admin;
     }
     
-    async editarEmpleado(body,correo) {
-        let user = await Empleado.findOne({ correo: correo });
+    async editarEmpleado(body) {
+        let user = await Empleado.findOne({ correo: body.correo });
         for (let clave in user) {
             if (body.hasOwnProperty(clave)) {
                user[clave] = body[clave];
