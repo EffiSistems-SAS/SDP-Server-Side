@@ -7,8 +7,13 @@ let controller = new MongoController();
 
 routerAdmin.post('/create',async (req,res) => {
     req.body.id = `IDEMPLEADO_${Date.now()}`
-    await controller.crearEmpleado(req.body);
-    res.send(`Empleado con código ${req.body.id} creado`);
+    let empleado = await controller.crearEmpleado(req.body);
+    if(empleado){
+        res.status(200).send(`Empleado con código ${req.body.id} creado`);
+    }else{
+        res.status(400).send(`Ocurrio un error`);
+    }
+   
 });
 
 routerAdmin.delete('/delete/:correo?',async (req,res) => {
