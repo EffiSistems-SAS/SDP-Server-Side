@@ -23,9 +23,7 @@ routerAdmin.put('/edit/',(req,res) => {
 
 routerAdmin.get('/list',async (req,res) => {
     let lista = await controller.obtenerEmpleados();
-    res.json({
-        data:lista
-    });
+    res.json(lista);
 });
 
 module.exports = routerAdmin;
