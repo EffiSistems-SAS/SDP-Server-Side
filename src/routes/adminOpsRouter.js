@@ -13,7 +13,6 @@ routerAdmin.post('/create',async (req,res) => {
     }else{
         res.status(400).send(`Ocurrio un error`);
     }
-   
 });
 
 routerAdmin.delete('/delete/:correo?',async (req,res) => {

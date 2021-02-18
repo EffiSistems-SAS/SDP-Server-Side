@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const empleadoSchema = new Schema({
     nombre:{ type:String, required:true},
-    contraseña:{ type:String, required:true},
+    contrasena:{ type:String, required:true},
     id:{type:String,required:true},
     correo:{type:String,required:true,unique:true},
     rol:{type:String,required:true},

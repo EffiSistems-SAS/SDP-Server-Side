@@ -3,11 +3,12 @@ const Administrador = require('../models/Administrador');
 
 class MongoController {
 
-    async crearEmpleado(user){
+    crearEmpleado(user){
         const empleado = new Empleado(user);
         return empleado.save().then((data) => {
             return data;
         }).catch((err) => {
+            // console.log(err);
             return null;
         });
     }
