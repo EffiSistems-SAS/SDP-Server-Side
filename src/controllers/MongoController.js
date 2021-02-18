@@ -14,8 +14,8 @@ class MongoController {
         administrador.save();
     }
 
-    async obtenerEmpleado(correo,contraseña){
-        const empleado = await Empleado.findOne({ correo: correo,contraseña:contraseña });
+    async obtenerEmpleado(body){
+        const empleado = await Empleado.findOne(body);
         return empleado;
     }
 

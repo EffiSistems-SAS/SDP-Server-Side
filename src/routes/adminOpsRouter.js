@@ -21,9 +21,21 @@ routerAdmin.put('/edit/',(req,res) => {
     res.send(`Empleado ${user.nombre} editado`);
 });
 
+routerAdmin.get('/get/:correo',async (req,res) => {
+    let empleado = await controller.obtenerEmpleado({correo:req.params['correo']});
+    if(empleado){
+        res.status(200).json(empleado);
+    }else{
+        res.status(404).send('Empleado no encontrado');
+    }
+    
+});
+
 routerAdmin.get('/list',async (req,res) => {
     let lista = await controller.obtenerEmpleados();
     res.json(lista);
 });
+
+
 
 module.exports = routerAdmin;
