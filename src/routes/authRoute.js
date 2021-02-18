@@ -8,7 +8,7 @@ let controller = new MongoController();
 routerAuth.get('/login/:mail/:password', async (req,res) => {
     const empleado = await controller.obtenerEmpleado(req.params['mail'],req.params['password']);
     if(empleado){
-        const administrador = await controller.obtenerAdministrador(req.params['mail'],req.params['password']);
+        const administrador = await controller.obtenerAdministrador({idEmpleado:empleado.id});
         if(administrador){
             res.status(202).send('Administrador encontrado.');
         }else{

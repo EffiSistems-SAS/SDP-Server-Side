@@ -20,8 +20,8 @@ class MongoController {
        
     }
 
-    async obtenerAdministrador(correo,contraseña){
-        const admin = await Administrador.findOne({ correo: correo,contraseña:contraseña });
+    async obtenerAdministrador(data){
+        const admin = await Administrador.findOne(data);
         return admin;
     }
 
