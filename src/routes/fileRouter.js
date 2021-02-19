@@ -13,7 +13,7 @@ let gfs;
 
 conn.once('open',() => {
   gfs = Grid(conn.db, mongoose.mongo);
-  gfs.collection("uploads");
+  gfs.collection("archivos");
 });
 
 
@@ -52,7 +52,7 @@ router.get("/get/:filename?", (req, res) => {
     }
     // res.json({file});
     
-    res.download(relativePath,`New ${req.query.filename}`, function (err) {
+    res.status(200).download(relativePath,`New ${req.query.filename}`, function (err) {
       if (err) {
         console.log(err);
       }

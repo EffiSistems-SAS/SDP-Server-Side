@@ -10,7 +10,7 @@ const storage = new GridFsStorage({
       const filename = file.originalname;
       const fileInfo = {
         filename: filename,
-        bucketName: "uploads",
+        bucketName: "archivos",
       };
       resolve(fileInfo);
     });

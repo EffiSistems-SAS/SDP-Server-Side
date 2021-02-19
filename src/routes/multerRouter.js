@@ -6,14 +6,14 @@ const moveFile = require('move-file');
 
 routerMulter.use(reciveFiles());
 
-routerMulter.post('/',async (req,res) => {
+routerMulter.post('/:name',async (req,res) => {
   
     multer.diskStorage({
-        destination: `uploads/${req.query.name}`
+        destination: `uploads/${req.params['name']}`
     });
 
-    await moveFile(`uploads/data/${req.file.originalname}`, `uploads/data/${req.query.name}/${req.file.originalname}`);
-    res.send('Archivo guardado');
+    await moveFile(`uploads/${req.file.originalname}`, `uploads/${req.params['name']}/${req.file.originalname}`);
+    res.status(200).send('Archivo guardado');
 });
 
 

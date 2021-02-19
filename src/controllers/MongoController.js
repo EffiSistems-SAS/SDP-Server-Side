@@ -8,6 +8,7 @@ class MongoController {
         return empleado.save().then((data) => {
             return data;
         }).catch((err) => {
+            console.log(err);
             return null;
         });
     }
@@ -15,7 +16,11 @@ class MongoController {
     createAdministrador(admin){
         //await mongoose.createConnection(MongoURI);
         const administrador = new Administrador(admin);
-        administrador.save();
+        return administrador.save().then((data) => {
+            return data
+        }).catch(() => {
+            return null;
+        });
     }
 
     async obtenerEmpleado(body){

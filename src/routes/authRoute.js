@@ -6,7 +6,7 @@ const routerAuth = Router();
 let controller = new MongoController();
 
 routerAuth.get('/login/:mail/:password', async (req,res) => {
-    const empleado = await controller.obtenerEmpleado({correo:req.params['mail'],contraseña:req.params['password']});
+    const empleado = await controller.obtenerEmpleado({correo:req.params['mail'],contrasena:req.params['password']});
     if(empleado){
         const administrador = await controller.obtenerAdministrador({idEmpleado:empleado.id});
         if(administrador){
@@ -15,6 +15,7 @@ routerAuth.get('/login/:mail/:password', async (req,res) => {
             res.status(200).send('Empleado encontrado.');
         }
     }else{
+        console.log('Entre');
         res.status(404).send('Correo o contraseña incorrecta.');
     }
 });
