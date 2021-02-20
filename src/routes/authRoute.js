@@ -15,7 +15,6 @@ routerAuth.get('/login/:mail/:password', async (req,res) => {
             res.status(200).send('Empleado encontrado.');
         }
     }else{
-        console.log('Entre');
         res.status(404).send('Correo o contraseña incorrecta.');
     }
 });

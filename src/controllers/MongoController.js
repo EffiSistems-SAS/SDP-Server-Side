@@ -1,5 +1,6 @@
 const Empleado = require('../models/Empleado');
 const Administrador = require('../models/Administrador');
+const Registro = require('../models/Registro');
 
 class MongoController {
 
@@ -14,11 +15,19 @@ class MongoController {
     }
 
     createAdministrador(admin){
-        //await mongoose.createConnection(MongoURI);
         const administrador = new Administrador(admin);
         return administrador.save().then((data) => {
-            return data
+            return data;
         }).catch(() => {
+            return null;
+        });
+    }
+
+    insertarRegistro(registro){
+        const newRegister = new Registro(registro);
+        return newRegister.save().then((data) => {
+            return data;
+        }).catch((err) => {
             return null;
         });
     }
@@ -56,7 +65,6 @@ class MongoController {
         user.save();
         return user;
     }
-
 
 }
 

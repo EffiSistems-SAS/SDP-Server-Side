@@ -6,8 +6,8 @@ const { upload } = require("../functions/storageMongo");
 const path = require('path');
 const router = Router();
 const MongoUri = require('../private/credentialsDB');
-const reciveFiles = require("../functions/reciveFiles");
 const conn = mongoose.createConnection(MongoUri);
+const MongoController = require('../controllers/MongoController');
 
 let gfs;
 
@@ -15,9 +15,6 @@ conn.once('open',() => {
   gfs = Grid(conn.db, mongoose.mongo);
   gfs.collection("archivos");
 });
-
-
-//router.use(reciveFiles());
 
 router.get("/", async (req, res) => {
   if (gfs === undefined) {
@@ -36,38 +33,39 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/get/:filename?", (req, res) => {
+router.get("/get/:empName/:fileName", (req, res) => {
 
-  let as = path.resolve('uploads',`${req.query.filename}`);
-    console.log("- - - - - - - - - path - - - - - - - - -");
-    console.log(as);
-    console.log("- - - - - - - - - path - - - - - - - - -");
-  let relativePath = path.relative(__dirname,'uploads',req.query.filename);
-
+  let relativePath = path.resolve('uploads',req.params['empName'],req.params['fileName']);
+  console.log(req.params['empName']);
+  console.log(req.params['fileName']);
+  console.log(relativePath);
   gfs.files.findOne({ filename: req.query.filename }, (err, file) => {
     if (!file || file.length === 0) {
       return res.status(404).json({
         err: "No file exists",
       });
     }
-    // res.json({file});
-    
     res.status(200).download(relativePath,`New ${req.query.filename}`, function (err) {
       if (err) {
         console.log(err);
       }
-      console.log("Downloaded");
     });
   });
 });
 
-router.post("/post", upload.single("file"), async (req, res) => {
-  
+router.post("/post/:id", upload.single("file"), async (req, res) => {
   if (req.file === undefined) {
+    console.log("asd");
     res.send("Ha ocurrido un error");
   } else {  
+    let mongoController = new MongoController();
+    await mongoController.insertarRegistro({idEmpleado:req.params['id'],idFile:req.file.id});
     res.send("File uploaded");
   }
 });
+
+// router.get(){
+
+// }
 
 module.exports = router;
