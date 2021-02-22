@@ -66,6 +66,11 @@ class MongoController {
         return user;
     }
 
+    async obtenerArchivos(idEmp){
+        let registro = await Registro.find({idEmpleado:idEmp}).populate('idFile').exec();
+        return registro;
+    }
+
 }
 
 module.exports = MongoController;
