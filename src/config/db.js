@@ -10,6 +10,6 @@ module.exports =() => {
     }).then(() => {
         console.log('Base de datos conectada');
     }).catch(() => {
-        console.log('Error');
+        console.log('Error en la conexión de la base de datos');
     });
 };

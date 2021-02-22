@@ -15,7 +15,6 @@ routerMulter.post('/:name',(req,res) => {
     moveFile(`uploads/${req.file.originalname}`, `uploads/${req.params['name']}/${req.file.originalname}`).then((result) => {
         res.status(200).send('Archivo guardado');
     }).catch((err) => {
-        console.log(err);
         res.status(400);
     });
 });

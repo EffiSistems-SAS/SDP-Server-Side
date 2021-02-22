@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Grid = require("gridfs-stream");
 const { Router } = require("express");
 const { upload } = require("../functions/storageMongo");
+const { verifArchivoExistente } = require("../functions/verifArchivo");
 const path = require("path");
 const router = Router();
 const MongoUri = require("../private/credentialsDB");
@@ -54,17 +55,22 @@ router.get("/get/:empName/:fileName", (req, res) => {
   });
 });
 
-router.post("/post/:id", upload.single("file"), async (req, res) => {
-  if (req.file === undefined) {
-    res.send("Ha ocurrido un error");
-  } else {
-    let mongoController = new MongoController();
-    await mongoController.insertarRegistro({
-      idEmpleado: req.params["id"],
-      idFile: req.file.id,
-    });
-    res.send("File uploaded");
-  }
+router.post("/post/:id", verifArchivoExistente, upload.single("file"), async (req, res) => {
+      let RegistroRes = await mongoController.insertarRegistro({
+        idEmpleado: req.params["id"],
+        idFile: req.file.id,
+      });
+      console.log("Llegó a insertar registro");
+      let HistorialRes = await mongoController.insertarHistorialCambios({
+        idFile: req.file.id,
+        cambios: { version: 1.0, fecha: new Date().toString() },
+      });
+      console.log("Llegó a insertar historial");
+      if (RegistroRes === null || HistorialRes === null) {
+        res.status(400).send("Hubo un error");
+      } else {
+        res.status(200).send("File uploaded");
+      }
 });
 
 router.get("/get/:idEmp", async (req, res) => {
@@ -75,6 +81,21 @@ router.get("/get/:idEmp", async (req, res) => {
   } else {
     res.json(archivos);
   }
+});
+
+router.delete("/delete/:idEmp/:idFile", async (req, res) => {
+  let mongoController = new MongoController();
+  console.log(req.params["idFile"]);
+  let statusArchivo = await mongoController.eliminarArchivo(
+    req.params["idFile"]
+  );
+  let statusRegistro = await mongoController.eliminarRegistro(
+    req.params["idEmp"],
+    req.params["idFile"]
+  );
+  res
+    .status(statusArchivo === 200 && statusRegistro === 200 ? 200 : 400)
+    .send();
 });
 
 module.exports = router;
