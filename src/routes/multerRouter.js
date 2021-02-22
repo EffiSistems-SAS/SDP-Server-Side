@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const routerMulter = Router();
-const reciveFiles = require('../functions/reciveFiles');
+const reciveFiles = require('../functions/receiveFiles');
 const multer = require('multer');
 const moveFile = require('move-file');
 
