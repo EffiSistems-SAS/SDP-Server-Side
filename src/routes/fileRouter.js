@@ -84,7 +84,6 @@ router.post("/post/:idEmpleado/:fileName",verifExistencia,upload.single("file"),
 
 router.delete("/delete/:idEmp/:idFile", async (req, res) => {
   let mongoController = new MongoController();
-  console.log(req.params["idFile"]);
   let statusArchivo = await mongoController.eliminarArchivo(
     req.params["idFile"]
   );
