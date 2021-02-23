@@ -1,9 +1,14 @@
+//Modelos
+
 const Empleado = require('../models/Empleado');
 const Administrador = require('../models/Administrador');
 const Registro = require('../models/Registro');
 const archivos_files = require('../models/archivos.files');
 const Historial = require('../models/HistorialCambios');
+
 class MongoController {
+
+    //Administrador
 
     createAdministrador(admin){
         const administrador = new Administrador(admin);
@@ -18,6 +23,8 @@ class MongoController {
         const admin = await Administrador.findOne(data);
         return admin;
     }
+
+    //Empleado
 
     crearEmpleado(user){
         const empleado = new Empleado(user);
@@ -57,6 +64,8 @@ class MongoController {
         return user;
     }
 
+    //Archivos
+
     eliminarArchivo(idFile){
         return archivos_files.deleteOne({ _id:idFile }).then((result) => {
             return 200;
@@ -69,6 +78,12 @@ class MongoController {
         let registro = await Registro.find({idEmpleado:idEmp}).populate('idFile').exec();
         return registro;
     }
+
+    async obtenerArchivo(fileName){
+        return await archivos_files.findOne({filename:fileName});
+    }
+
+    //Registros
 
     insertarRegistro(registro){
         const newRegister = new Registro(registro);
@@ -88,14 +103,17 @@ class MongoController {
     }
 
     async obtenerRegistros(idEmpleado){
-        return await Registro.find({ idEmpleado:idEmpleado });
+        return await Registro.find({ idEmpleado:idEmpleado }).populate('idFile').exec();
     }
+
+    //Historial de cambios
 
     insertarHistorialCambios(idFile,Cambios){
         const newHistory = new Historial({idFile:idFile, cambios:Cambios});
         return newHistory.save().then((data) => {
             return data;
         }).catch((err) => {
+            console.log(err);
             return null;
         }); 
     }

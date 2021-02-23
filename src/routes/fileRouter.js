@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const Grid = require("gridfs-stream");
 const { Router } = require("express");
 const { upload } = require("../functions/storageMongo");
-const { verifArchivoExistente } = require("../functions/verifArchivoExistente");
 const path = require("path");
 const router = Router();
 const MongoUri = require("../private/credentialsDB");
@@ -10,6 +9,7 @@ const conn = mongoose.createConnection(MongoUri);
 const MongoController = require("../controllers/MongoController");
 
 let gfs;
+let mongoController = new MongoController();
 
 conn.once("open", () => {
   gfs = Grid(conn.db, mongoose.mongo);
@@ -30,6 +30,16 @@ router.get("/", async (req, res) => {
         files,
       });
     });
+  }
+});
+
+router.get("/get/:idEmp", async (req, res) => {
+  let mongoController = new MongoController();
+  let archivos = await mongoController.obtenerArchivos(req.params["idEmp"]);
+  if (archivos === null) {
+    res.json({ status: "Usuario sin archivos subidos" });
+  } else {
+    res.json(archivos);
   }
 });
 
@@ -55,33 +65,20 @@ router.get("/get/:empName/:fileName", (req, res) => {
   });
 });
 
-router.post("/post/:id", verifArchivoExistente, upload.single("file"), async (req, res) => {
-      let RegistroRes = await mongoController.insertarRegistro({
-        idEmpleado: req.params["id"],
-        idFile: req.file.id,
-      });
-      console.log("Llegó a insertar registro");
-      let HistorialRes = await mongoController.insertarHistorialCambios({
-        idFile: req.file.id,
-        cambios: { version: 1.0, fecha: new Date().toString() },
-      });
-      console.log("Llegó a insertar historial");
-      if (RegistroRes === null || HistorialRes === null) {
-        res.status(400).send("Hubo un error");
-      } else {
-        res.status(200).send("File uploaded");
-      }
-});
-
-router.get("/get/:idEmp", async (req, res) => {
-  let mongoController = new MongoController();
-  let archivos = await mongoController.obtenerArchivos(req.params["idEmp"]);
-  if (archivos === null) {
-    res.json({ status: "Usuario sin archivos subidos" });
+router.post("/post/:id", upload.single("file"), async (req, res) => {
+  let RegistroRes = await mongoController.insertarRegistro({
+    idEmpleado: req.params["id"],
+    idFile: req.file.id,
+  });
+  let HistorialRes = await mongoController.insertarHistorialCambios(req.file.id,{ version: 1.0, fecha: new Date().toString() });
+  if (RegistroRes === null || HistorialRes === null) {
+    res.status(400).send("Hubo un error");
   } else {
-    res.json(archivos);
+    res.status(200).send("File uploaded");
   }
 });
+
+
 
 router.delete("/delete/:idEmp/:idFile", async (req, res) => {
   let mongoController = new MongoController();

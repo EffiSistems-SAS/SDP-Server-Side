@@ -1,6 +1,5 @@
 const { Router } = require('express');
 const MongoController = require('../controllers/MongoController');
-const router = require('./fileRouter');
 
 const routerAdmin = Router();
 let controller = new MongoController();
