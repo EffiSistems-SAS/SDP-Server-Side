@@ -1,13 +1,15 @@
 const mongoose = require("mongoose");
 const Grid = require("gridfs-stream");
-const { Router } = require("express");
-const { upload } = require("../functions/storageMongo");
 const path = require("path");
-const router = Router();
 const MongoUri = require("../private/credentialsDB");
 const conn = mongoose.createConnection(MongoUri);
 const MongoController = require("../controllers/MongoController");
 
+const { Router } = require("express");
+const { upload } = require("../functions/storageMongo");
+const { verifExistencia } = require('../functions/registroMiddleWares');
+
+const router = Router();
 let gfs;
 let mongoController = new MongoController();
 
@@ -65,14 +67,14 @@ router.get("/get/:empName/:fileName", (req, res) => {
   });
 });
 
-router.post("/post/:id", upload.single("file"), async (req, res) => {
+router.post("/post/:idEmpleado/:fileName",verifExistencia,upload.single("file"), async (req, res) => {
   let RegistroRes = await mongoController.insertarRegistro({
-    idEmpleado: req.params["id"],
+    idEmpleado: req.params["idEmpleado"],
     idFile: req.file.id,
   });
   let HistorialRes = await mongoController.insertarHistorialCambios(req.file.id,{ version: 1.0, fecha: new Date().toString() });
   if (RegistroRes === null || HistorialRes === null) {
-    res.status(400).send("Hubo un error");
+    res.status(400).send("Hubo un error al crear el registro o el historial");
   } else {
     res.status(200).send("File uploaded");
   }
@@ -90,9 +92,7 @@ router.delete("/delete/:idEmp/:idFile", async (req, res) => {
     req.params["idEmp"],
     req.params["idFile"]
   );
-  res
-    .status(statusArchivo === 200 && statusRegistro === 200 ? 200 : 400)
-    .send();
+  res.status(statusArchivo === 200 && statusRegistro === 200 ? 200 : 400).send('');
 });
 
 module.exports = router;

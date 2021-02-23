@@ -118,6 +118,16 @@ class MongoController {
         }); 
     }
 
+    async editarHistorial(id) {
+        let historial = await Historial.findOne({ idFile: id });
+        if(historial === null || historial === undefined){
+            return null;
+        }
+        historial.cambios.push({version:historial.cambios.length+1,fecha:new Date().toString()});
+        historial.save();
+        return historial;
+    }
+
 }
 
 module.exports = MongoController;
