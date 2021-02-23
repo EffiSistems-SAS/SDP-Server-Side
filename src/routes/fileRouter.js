@@ -81,9 +81,7 @@ router.post("/post/:idEmpleado/:fileName",verifExistencia,upload.single("file"),
 });
 
 
-
 router.delete("/delete/:idEmp/:idFile", async (req, res) => {
-  let mongoController = new MongoController();
   let statusArchivo = await mongoController.eliminarArchivo(
     req.params["idFile"]
   );
@@ -91,7 +89,9 @@ router.delete("/delete/:idEmp/:idFile", async (req, res) => {
     req.params["idEmp"],
     req.params["idFile"]
   );
-  res.status(statusArchivo === 200 && statusRegistro === 200 ? 200 : 400).send('');
+  let statusHistorial = await mongoController.eliminarHistorialArchivo(req.params['idFile']);
+
+  res.status(statusArchivo === 200 && statusRegistro === 200 && statusHistorial === 200 ? 200 : 400).send('');
 });
 
 module.exports = router;

@@ -118,6 +118,14 @@ class MongoController {
         }); 
     }
 
+    obtenerHistorialCambios(id){
+        return Historial.findOne({idFile:id}).then((data) => {
+            return data;
+        }).catch(() => {
+            return null;
+        });
+    }
+
     async editarHistorial(id) {
         let historial = await Historial.findOne({ idFile: id });
         if(historial === null || historial === undefined){
@@ -126,6 +134,14 @@ class MongoController {
         historial.cambios.push({version:historial.cambios.length+1,fecha:new Date().toString()});
         historial.save();
         return historial;
+    }
+
+    eliminarHistorialArchivo(idFile){
+        return Historial.deleteOne({ idFile:idFile}).then(() => {
+            return 200;
+        }).catch(() => {
+            return 400;
+        });
     }
 
 }

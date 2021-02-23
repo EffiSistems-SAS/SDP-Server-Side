@@ -12,7 +12,7 @@ const HistorialCambios = new Schema({
   cambios: {
     type: [
       {
-        version: { type: Number, required: true, unique: true },
+        version: { type: Number, required: true },
         fecha: { type: Date, required: true, unique: true },
       },
     ],

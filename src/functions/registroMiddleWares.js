@@ -1,15 +1,6 @@
 const MongoController = require('../controllers/MongoController');
 let controller = new MongoController();
-
-const formatString = (input) => {
-    let texto = input.replaceAll('+',' ');
-    texto = texto.replaceAll('á','?');
-    texto = texto.replaceAll('é','?');
-    texto = texto.replaceAll('í','?');
-    texto = texto.replaceAll('ó','?');
-    texto = texto.replaceAll('ú','?');
-    return texto;
-}
+const { formatString } = require('./proccesData');
 
 const verifExistencia = async (req,res,next) => {
 
@@ -22,7 +13,6 @@ const verifExistencia = async (req,res,next) => {
         let registroEditar;
 
         for(let e of registros){
-            console.log(e.idFile.filename);
             if(e.idFile.filename === text){
                 registroEditar = e.idFile._id;
                 estado = false;
@@ -43,5 +33,5 @@ const verifExistencia = async (req,res,next) => {
 }
 
 module.exports = {
-    verifExistencia
+    verifExistencia,
 }

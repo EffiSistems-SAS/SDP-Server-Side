@@ -6,6 +6,7 @@ const authRouter = require('../routes/authRouter');
 const multerRouter = require('../routes/multerRouter');
 const routerAdmin = require('../routes/adminOpsRouter');
 const routerRegistros = require('../routes/registroRouter');
+const historialRouter = require('../routes/historialRouter');
 
 
 module.exports = (app) => {
@@ -32,6 +33,7 @@ module.exports = (app) => {
   app.use('/multer',multerRouter);
   app.use('/adminOps',routerAdmin);
   app.use('/registros',routerRegistros);
+  app.use('/historialCambios',historialRouter);
 
 
   //Inicializando aplicación en el puerto dado por el entorno
