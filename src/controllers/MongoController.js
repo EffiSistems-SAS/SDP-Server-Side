@@ -102,6 +102,15 @@ class MongoController {
         });
     }
 
+     eliminarRegistros(idEmpleado){
+        return Registro.deleteMany({idEmpleado:idEmpleado}).then(() => {
+            return 200;
+        }).catch(() => {
+            return 400;
+        });
+
+    }
+
     async obtenerRegistros(idEmpleado){
         return await Registro.find({ idEmpleado:idEmpleado }).populate('idFile').exec();
     }

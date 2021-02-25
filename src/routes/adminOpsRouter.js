@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const MongoController = require('../controllers/MongoController');
+const { deleteFilesMiddleWare } = require('../functions/adminMiddleWares');
 
 const routerAdmin = Router();
 let controller = new MongoController();
@@ -14,8 +15,8 @@ routerAdmin.post('/create',async (req,res) => {
     }
 });
 
-routerAdmin.delete('/delete/:correo?',async (req,res) => {
-    let respuesta = await controller.eliminarEmpleado(req.query.correo);
+routerAdmin.delete('/delete/:correo/',deleteFilesMiddleWare,async (req,res) => {
+    let respuesta = await controller.eliminarEmpleado(req.params['correo']);
     res.status(202).send(respuesta);
 });
 
