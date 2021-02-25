@@ -1,4 +1,6 @@
 const MongoController = require('../controllers/MongoController');
+const fs = require('fs');
+const path = require('path');
 let controller = new MongoController();
 
 const deleteFilesMiddleWare = async (req,res,next) => {
@@ -16,7 +18,13 @@ const deleteFilesMiddleWare = async (req,res,next) => {
         await controller.eliminarArchivo(ids[i]);
     }
 
-    next();
+    let pathFileRemove = empleado.nombre.replaceAll(' ','+');
+    fs.rmdir(path.resolve('uploads',pathFileRemove), { recursive: true },(err) => {
+        if(err)
+            console.log(err);
+        else
+            next();    
+    });
 }
 
 module.exports = {
