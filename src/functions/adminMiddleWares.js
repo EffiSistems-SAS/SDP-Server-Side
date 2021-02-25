@@ -18,7 +18,7 @@ const deleteFilesMiddleWare = async (req,res,next) => {
         await controller.eliminarArchivo(ids[i]);
     }
 
-    let pathFileRemove = empleado.nombre.replaceAll(' ','+');
+    let pathFileRemove = empleado.nombre.replace(/ /,'+');
     fs.rmdir(path.resolve('uploads',pathFileRemove), { recursive: true },(err) => {
         if(err)
             console.log(err);
