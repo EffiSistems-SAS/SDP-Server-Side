@@ -5,7 +5,7 @@ const getDatabaseConnection = require('./config/db');
 const app = express();
 
 app.get('/', (req,res) => {
-    res.send('SDP SERVER');
+    res.send('<h1>SDP SERVER</h1>');
 })
 
 getDatabaseConnection();
