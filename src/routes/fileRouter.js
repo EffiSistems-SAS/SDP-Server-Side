@@ -7,7 +7,7 @@ const MongoController = require("../controllers/MongoController");
 
 const { Router } = require("express");
 const { upload } = require("../functions/storageMongo");
-const { verifExistencia } = require('../functions/registroMiddleWares');
+const { verifExistencia } = require("../functions/registroMiddleWares");
 
 const router = Router();
 let gfs;
@@ -45,21 +45,18 @@ router.get("/get/:idEmp", async (req, res) => {
   }
 });
 
-router.get("/get/:empName/:fileName", (req, res) => {
-  let relativePath = path.resolve(
-    "uploads",
-    req.params["empName"],
-    req.params["fileName"]
-  );
-  gfs.files.findOne({ filename: req.query.filename }, (err, file) => {
+router.get("/download/:empName/:fileName", (req, res) => {
+  let relativePath = path.resolve("uploads",req.params["empName"],req.params["fileName"]);
+  gfs.files.findOne({ filename: req.params['fileName'] }, (err, file) => {
+    console.log(req.params['fileName']);
+    console.log(file);
     if (!file || file.length === 0) {
       return res.status(404).json({
         err: "No file exists",
       });
     }
-    res
-      .status(200)
-      .download(relativePath, `New ${req.query.filename}`, function (err) {
+    console.log(relativePath);
+    res.status(200).download(relativePath, `New ${req.query.filename}`, function (err) {
         if (err) {
           console.log(err);
         }
@@ -67,19 +64,26 @@ router.get("/get/:empName/:fileName", (req, res) => {
   });
 });
 
-router.post("/post/:idEmpleado/:fileName",verifExistencia,upload.single("file"), async (req, res) => {
-  let RegistroRes = await mongoController.insertarRegistro({
-    idEmpleado: req.params["idEmpleado"],
-    idFile: req.file.id,
-  });
-  let HistorialRes = await mongoController.insertarHistorialCambios(req.file.id,{ version: 1.0, fecha: new Date().toString() });
-  if (RegistroRes === null || HistorialRes === null) {
-    res.status(400).send("Hubo un error al crear el registro o el historial");
-  } else {
-    res.status(200).send("File uploaded");
+router.post(
+  "/post/:idEmpleado/:fileName",
+  verifExistencia,
+  upload.single("file"),
+  async (req, res) => {
+    let RegistroRes = await mongoController.insertarRegistro({
+      idEmpleado: req.params["idEmpleado"],
+      idFile: req.file.id,
+    });
+    let HistorialRes = await mongoController.insertarHistorialCambios(
+      req.file.id,
+      { version: 1.0, fecha: new Date().toString() }
+    );
+    if (RegistroRes === null || HistorialRes === null) {
+      res.status(400).send("Hubo un error al crear el registro o el historial");
+    } else {
+      res.status(200).send("File uploaded");
+    }
   }
-});
-
+);
 
 router.delete("/delete/:idEmp/:idFile", async (req, res) => {
   let statusArchivo = await mongoController.eliminarArchivo(
@@ -89,9 +93,17 @@ router.delete("/delete/:idEmp/:idFile", async (req, res) => {
     req.params["idEmp"],
     req.params["idFile"]
   );
-  let statusHistorial = await mongoController.eliminarHistorialArchivo(req.params['idFile']);
+  let statusHistorial = await mongoController.eliminarHistorialArchivo(
+    req.params["idFile"]
+  );
 
-  res.status(statusArchivo === 200 && statusRegistro === 200 && statusHistorial === 200 ? 200 : 400).send('');
+  res
+    .status(
+      statusArchivo === 200 && statusRegistro === 200 && statusHistorial === 200
+        ? 200
+        : 400
+    )
+    .send("");
 });
 
 module.exports = router;
